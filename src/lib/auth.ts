@@ -17,21 +17,23 @@ export type AppUser = {
 // Supabase para validar la sesión.
 export const getCurrentUser = cache(async (): Promise<AppUser | null> => {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims valida el JWT localmente en vez de consultar al servidor de
+  // Auth en cada carga de página (getUser hace un viaje de red siempre).
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims;
 
-  if (!user) return null;
+  if (!claims) return null;
+
+  const userMeta = claims.user_metadata as
+    | { full_name?: string }
+    | undefined;
+  const appMeta = claims.app_metadata as { role?: UserRole } | undefined;
 
   return {
-    id: user.id,
-    email: user.email ?? "",
-    name:
-      (user.user_metadata?.full_name as string | undefined) ??
-      user.email ??
-      "Usuario",
-    role:
-      (user.app_metadata?.role as UserRole | undefined) ?? "profesional",
+    id: claims.sub,
+    email: (claims.email as string | undefined) ?? "",
+    name: userMeta?.full_name ?? (claims.email as string | undefined) ?? "Usuario",
+    role: appMeta?.role ?? "profesional",
   };
 });
 
