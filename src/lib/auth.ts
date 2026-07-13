@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -11,7 +12,10 @@ export type AppUser = {
 };
 
 // Devuelve el usuario logueado (o null), con su nombre y rol.
-export async function getCurrentUser(): Promise<AppUser | null> {
+// cache(): dentro de una misma carga de página, el layout y la página piden
+// este mismo dato — sin esto, cada uno dispara su propio viaje de red a
+// Supabase para validar la sesión.
+export const getCurrentUser = cache(async (): Promise<AppUser | null> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -29,10 +33,12 @@ export async function getCurrentUser(): Promise<AppUser | null> {
     role:
       (user.app_metadata?.role as UserRole | undefined) ?? "profesional",
   };
-}
+});
 
 // Lista todos los usuarios del equipo (para selects de profesional, etc.).
-export async function listUsers(): Promise<AppUser[]> {
+// cache(): evita repetir la llamada a la API de administración si varias
+// partes de la misma página la necesitan.
+export const listUsers = cache(async (): Promise<AppUser[]> => {
   const admin = createAdminClient();
   const { data } = await admin.auth.admin.listUsers();
   return (data?.users ?? []).map((u) => ({
@@ -44,4 +50,4 @@ export async function listUsers(): Promise<AppUser[]> {
       "Usuario",
     role: (u.app_metadata?.role as UserRole | undefined) ?? "profesional",
   }));
-}
+});
