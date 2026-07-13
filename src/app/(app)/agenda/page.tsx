@@ -24,6 +24,8 @@ import {
 import TurnoForm from "@/components/TurnoForm";
 import TurnoRow from "@/components/TurnoRow";
 import SetupBanner from "@/components/SetupBanner";
+import PageHeader from "@/components/PageHeader";
+import EmptyState from "@/components/EmptyState";
 
 const dotDe = Object.fromEntries(
   ESTADOS_TURNO.map((e) => [e.value, e.dot]),
@@ -114,15 +116,11 @@ export default async function AgendaPage({
 
   return (
     <div>
-      <header className="mb-6 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <CalendarDays className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Agenda</h1>
-          <p className="text-sm text-slate-500">Turnos del consultorio.</p>
-        </div>
-      </header>
+      <PageHeader
+        icon={CalendarDays}
+        title="Agenda"
+        subtitle="Turnos del consultorio."
+      />
 
       {needsSetup && <SetupBanner />}
 
@@ -269,9 +267,11 @@ export default async function AgendaPage({
             </span>
           </div>
           {(porDia.get(dia) ?? []).length === 0 ? (
-            <p className="px-4 py-6 text-center text-sm text-slate-400">
-              Sin turnos este día. Agendá uno abajo.
-            </p>
+            <EmptyState
+              icon={CalendarDays}
+              title="Sin turnos este día"
+              description="Agendá uno con el formulario de abajo."
+            />
           ) : (
             <ul className="divide-y divide-slate-100">
               {(porDia.get(dia) ?? []).map((t) => (

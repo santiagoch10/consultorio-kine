@@ -6,6 +6,7 @@ import { DIAS_INACTIVIDAD, type Paciente } from "@/lib/types";
 import PacienteForm from "@/components/PacienteForm";
 import PacientesList from "@/components/PacientesList";
 import SetupBanner from "@/components/SetupBanner";
+import PageHeader from "@/components/PageHeader";
 
 export default async function PacientesPage() {
   const supabase = await createClient();
@@ -63,17 +64,11 @@ export default async function PacientesPage() {
 
   return (
     <div>
-      <header className="mb-8 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <Users className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Pacientes</h1>
-          <p className="text-sm text-slate-500">
-            Fichas, seguimiento y re-contacto de pacientes.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        icon={Users}
+        title="Pacientes"
+        subtitle="Fichas, seguimiento y re-contacto de pacientes."
+      />
 
       {needsSetup && <SetupBanner />}
 

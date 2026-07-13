@@ -11,6 +11,8 @@ import {
 import NuevoTratamientoForm from "@/components/NuevoTratamientoForm";
 import SetupBanner from "@/components/SetupBanner";
 import EstadoBadge from "@/components/EstadoBadge";
+import PageHeader from "@/components/PageHeader";
+import EmptyState from "@/components/EmptyState";
 import { isMissingTable } from "@/lib/supabase/errors";
 
 export default async function SesionesPage() {
@@ -53,17 +55,11 @@ export default async function SesionesPage() {
 
   return (
     <div>
-      <header className="mb-8 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <Activity className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Sesiones</h1>
-          <p className="text-sm text-slate-500">
-            Tratamientos por sesiones y su avance.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        icon={Activity}
+        title="Sesiones"
+        subtitle="Tratamientos por sesiones y su avance."
+      />
 
       {needsSetup && <SetupBanner />}
 
@@ -82,9 +78,11 @@ export default async function SesionesPage() {
         </div>
 
         {tratamientos.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-slate-400">
-            Todavía no hay tratamientos. Creá el primero arriba.
-          </p>
+          <EmptyState
+            icon={Activity}
+            title="Todavía no hay tratamientos"
+            description="Creá el primero con el formulario de arriba."
+          />
         ) : (
           <ul className="divide-y divide-slate-100">
             {tratamientos.map((t) => {

@@ -1,4 +1,4 @@
-import { Settings, Sliders, Target } from "lucide-react";
+import { Settings, Sliders, Target, Stethoscope } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingTable } from "@/lib/supabase/errors";
 import { CONFIGURACION_COSTEO_DEFAULT, type ConfiguracionCosteo, type Prestacion } from "@/lib/types";
@@ -7,6 +7,8 @@ import PrestacionRow from "@/components/PrestacionRow";
 import ParametrosCosteoForm from "@/components/ParametrosCosteoForm";
 import ObjetivoForm from "@/components/ObjetivoForm";
 import SetupBanner from "@/components/SetupBanner";
+import PageHeader from "@/components/PageHeader";
+import EmptyState from "@/components/EmptyState";
 
 export default async function ConfiguracionPage() {
   const supabase = await createClient();
@@ -21,19 +23,11 @@ export default async function ConfiguracionPage() {
 
   return (
     <div>
-      <header className="mb-8 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <Settings className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">
-            Configuración
-          </h1>
-          <p className="text-sm text-slate-500">
-            Prestaciones, parámetros de costeo y ajustes del consultorio.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        icon={Settings}
+        title="Configuración"
+        subtitle="Prestaciones, parámetros de costeo y ajustes del consultorio."
+      />
 
       {needsSetup && <SetupBanner />}
 
@@ -87,9 +81,11 @@ export default async function ConfiguracionPage() {
         </div>
 
         {prestaciones.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-slate-400">
-            Todavía no hay prestaciones. Agregá la primera arriba.
-          </p>
+          <EmptyState
+            icon={Stethoscope}
+            title="Todavía no hay prestaciones"
+            description="Agregá la primera con el formulario de arriba."
+          />
         ) : (
           <ul className="divide-y divide-slate-100">
             {prestaciones.map((p) => (

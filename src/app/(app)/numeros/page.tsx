@@ -8,6 +8,7 @@ import {
   Scale,
   BarChart3,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/format";
 import { puntoEquilibrio } from "@/lib/costeo";
@@ -17,6 +18,8 @@ import {
   type Costo,
 } from "@/lib/types";
 import MiniBarChart from "@/components/MiniBarChart";
+import PageHeader from "@/components/PageHeader";
+import StatCard, { type StatTone } from "@/components/StatCard";
 
 function ymHaceMeses(n: number): string {
   const d = new Date();
@@ -112,41 +115,41 @@ export default async function NumerosPage() {
       .reduce((a, c) => a + (Number(c.monto) || 0), 0),
   );
 
-  const kpis = [
-    { label: "Pacientes atendidos", value: String(pacientesAtendidos), hint: "Este mes", icon: Users },
-    { label: "Ingresos", value: formatCurrency(ingresosMes), hint: "Este mes", icon: TrendingUp },
-    { label: "Costos", value: formatCurrency(costosMes), hint: "Este mes", icon: Wallet },
-    { label: "Margen", value: `${margenPct.toFixed(1)}%`, hint: "Ingresos vs costos", icon: Percent },
-    { label: "Ticket promedio", value: formatCurrency(ticketPromedio), hint: "Por atención", icon: Receipt },
-    { label: "Markup promedio", value: `${markupPct.toFixed(1)}%`, hint: "Precio vs costo", icon: Scale },
+  const kpis: {
+    label: string;
+    value: string;
+    hint: string;
+    icon: LucideIcon;
+    tone: StatTone;
+  }[] = [
+    { label: "Pacientes atendidos", value: String(pacientesAtendidos), hint: "Este mes", icon: Users, tone: "brand" },
+    { label: "Ingresos", value: formatCurrency(ingresosMes), hint: "Este mes", icon: TrendingUp, tone: "positive" },
+    { label: "Costos", value: formatCurrency(costosMes), hint: "Este mes", icon: Wallet, tone: "neutral" },
+    { label: "Margen", value: `${margenPct.toFixed(1)}%`, hint: "Ingresos vs costos", icon: Percent, tone: margenPct >= 0 ? "positive" : "danger" },
+    { label: "Ticket promedio", value: formatCurrency(ticketPromedio), hint: "Por atención", icon: Receipt, tone: "brand" },
+    { label: "Markup promedio", value: `${markupPct.toFixed(1)}%`, hint: "Precio vs costo", icon: Scale, tone: "brand" },
   ];
 
   return (
     <div>
-      <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-800">
-          Números de Kinexus
-        </h1>
-        <p className="text-sm text-slate-500">
-          Análisis económico-financiero consolidado del consultorio.
-        </p>
-      </header>
+      <PageHeader
+        icon={BarChart3}
+        title="Números de Kinexus"
+        subtitle="Análisis económico-financiero consolidado del consultorio."
+      />
 
       {/* Tarjetas de KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <div key={kpi.label} className="rounded-xl border border-slate-200 bg-white p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-500">{kpi.label}</span>
-                <Icon className="h-5 w-5 text-brand" />
-              </div>
-              <p className="mt-3 text-2xl font-semibold text-slate-800">{kpi.value}</p>
-              <p className="mt-1 text-xs text-slate-400">{kpi.hint}</p>
-            </div>
-          );
-        })}
+        {kpis.map((kpi) => (
+          <StatCard
+            key={kpi.label}
+            label={kpi.label}
+            value={kpi.value}
+            hint={kpi.hint}
+            icon={kpi.icon}
+            tone={kpi.tone}
+          />
+        ))}
       </div>
 
       {/* Objetivo mensual + Punto de equilibrio */}

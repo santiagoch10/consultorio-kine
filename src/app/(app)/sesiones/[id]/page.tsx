@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, ClipboardList } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/format";
 import type { Sesion, Tratamiento } from "@/lib/types";
 import EstadoBadge from "@/components/EstadoBadge";
+import EmptyState from "@/components/EmptyState";
 import RegistrarSesionForm from "@/components/RegistrarSesionForm";
 import { updateEstado, agregarSesiones } from "../actions";
 
@@ -160,9 +161,11 @@ export default async function TratamientoDetalle({
           </h2>
         </div>
         {sesiones.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-slate-400">
-            Todavía no se registraron sesiones.
-          </p>
+          <EmptyState
+            icon={ClipboardList}
+            title="Sin sesiones registradas"
+            description="Registrá la primera con el formulario de arriba."
+          />
         ) : (
           <ul className="divide-y divide-slate-100">
             {sesiones.map((s) => (

@@ -3,6 +3,7 @@ import { UserCog } from "lucide-react";
 import { getCurrentUser, type UserRole } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import CreateUserForm from "@/components/CreateUserForm";
+import PageHeader from "@/components/PageHeader";
 
 export default async function UsuariosPage() {
   const me = await getCurrentUser();
@@ -16,17 +17,11 @@ export default async function UsuariosPage() {
 
   return (
     <div>
-      <header className="mb-8 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <UserCog className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Usuarios</h1>
-          <p className="text-sm text-slate-500">
-            Creá perfiles del equipo y asigná su rol.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        icon={UserCog}
+        title="Usuarios"
+        subtitle="Creá perfiles del equipo y asigná su rol."
+      />
 
       {/* Crear usuario */}
       <section className="mb-8 rounded-xl border border-slate-200 bg-white p-6">

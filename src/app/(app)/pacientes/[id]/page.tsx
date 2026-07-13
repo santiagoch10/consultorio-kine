@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MessageCircle, Trash2, ChevronRight } from "lucide-react";
+import { ArrowLeft, MessageCircle, Trash2, ChevronRight, Activity } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, soloDigitos } from "@/lib/format";
 import type { Paciente, Tratamiento } from "@/lib/types";
 import PacienteForm from "@/components/PacienteForm";
 import EstadoBadge from "@/components/EstadoBadge";
+import EmptyState from "@/components/EmptyState";
 import { deletePaciente } from "../actions";
 
 export default async function PacienteDetalle({
@@ -103,13 +104,12 @@ export default async function PacienteDetalle({
           </h2>
         </div>
         {tratamientos.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-slate-400">
-            Este paciente no tiene tratamientos. Creá uno desde{" "}
-            <Link href="/sesiones" className="font-medium text-brand underline">
-              Sesiones
-            </Link>
-            .
-          </p>
+          <EmptyState
+            icon={Activity}
+            title="Sin tratamientos"
+            description="Este paciente todavía no tiene tratamientos."
+            action={{ label: "Crear en Sesiones", href: "/sesiones" }}
+          />
         ) : (
           <ul className="divide-y divide-slate-100">
             {tratamientos.map((t) => {

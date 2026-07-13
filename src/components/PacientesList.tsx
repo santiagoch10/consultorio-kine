@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight, Search, Users } from "lucide-react";
 import type { Paciente } from "@/lib/types";
+import EmptyState from "@/components/EmptyState";
 
 export default function PacientesList({
   pacientes,
@@ -41,11 +42,17 @@ export default function PacientesList({
       </div>
 
       {filtrados.length === 0 ? (
-        <p className="px-6 py-8 text-center text-sm text-slate-400">
-          {pacientes.length === 0
-            ? "Todavía no hay pacientes. Creá el primero arriba."
-            : "No se encontraron pacientes con ese criterio."}
-        </p>
+        pacientes.length === 0 ? (
+          <EmptyState
+            icon={Users}
+            title="Todavía no hay pacientes"
+            description="Creá el primero con el formulario de arriba."
+          />
+        ) : (
+          <p className="px-6 py-10 text-center text-sm text-slate-400">
+            No se encontraron pacientes con ese criterio.
+          </p>
+        )
       ) : (
         <ul className="divide-y divide-slate-100">
           {filtrados.map((p) => (

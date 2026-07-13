@@ -8,6 +8,8 @@ import type { Costo } from "@/lib/types";
 import CostoForm from "@/components/CostoForm";
 import SetupBanner from "@/components/SetupBanner";
 import ResumenCostos from "@/components/ResumenCostos";
+import PageHeader from "@/components/PageHeader";
+import EmptyState from "@/components/EmptyState";
 import { deleteCosto } from "./actions";
 
 export default async function CostosPage() {
@@ -34,17 +36,11 @@ export default async function CostosPage() {
 
   return (
     <div>
-      <header className="mb-8 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <Wallet className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Costos</h1>
-          <p className="text-sm text-slate-500">
-            Gastos fijos y variables del consultorio.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        icon={Wallet}
+        title="Costos"
+        subtitle="Gastos fijos y variables del consultorio."
+      />
 
       {needsSetup && <SetupBanner />}
 
@@ -87,9 +83,11 @@ export default async function CostosPage() {
         </div>
 
         {costos.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-slate-400">
-            Todavía no hay costos cargados.
-          </p>
+          <EmptyState
+            icon={Wallet}
+            title="Todavía no hay costos"
+            description="Registrá el primero con el formulario de arriba."
+          />
         ) : (
           <ul className="divide-y divide-slate-100">
             {costos.map((c) => (

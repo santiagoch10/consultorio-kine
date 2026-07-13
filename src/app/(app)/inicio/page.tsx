@@ -8,40 +8,20 @@ import {
   UserPlus,
   CalendarCheck,
   ArrowRight,
+  Home,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { horaCorta } from "@/lib/format";
 import { hoyISO } from "@/lib/fecha";
 import { ESTADOS_TURNO, type EstadoTurno, type Turno } from "@/lib/types";
+import PageHeader from "@/components/PageHeader";
+import StatCard from "@/components/StatCard";
+import EmptyState from "@/components/EmptyState";
 
 const badgeDe = Object.fromEntries(
   ESTADOS_TURNO.map((e) => [e.value, e]),
 ) as Record<EstadoTurno, (typeof ESTADOS_TURNO)[number]>;
-
-function Card({
-  label,
-  value,
-  hint,
-  icon: Icon,
-}: {
-  label: string;
-  value: string | number;
-  hint: string;
-  icon: LucideIcon;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5">
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-slate-500">{label}</span>
-        <Icon className="h-5 w-5 text-brand" />
-      </div>
-      <p className="mt-3 text-2xl font-semibold text-slate-800">{value}</p>
-      <p className="mt-1 text-xs text-slate-400">{hint}</p>
-    </div>
-  );
-}
 
 export default async function InicioPage() {
   const hoy = hoyISO();
@@ -93,56 +73,54 @@ export default async function InicioPage() {
   return (
     <div>
       {/* Saludo */}
-      <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-800">
-          ¡Hola, {nombre}! 👋
-        </h1>
-        <p className="text-sm text-slate-500">{fechaLarga}</p>
-      </header>
+      <PageHeader icon={Home} title={`¡Hola, ${nombre}! 👋`} subtitle={fechaLarga} />
 
       {/* Resumen del día */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card
+        <StatCard
           label="Pacientes del día"
           value={pacientesDelDia}
           hint="Con turno hoy"
           icon={Users}
         />
-        <Card
+        <StatCard
           label="Próximos turnos"
           value={proximos}
           hint="Pendientes / confirmados hoy"
           icon={CalendarClock}
         />
-        <Card
+        <StatCard
           label="Turnos cancelados"
           value={cancelados}
           hint="Hoy"
           icon={XCircle}
+          tone={cancelados > 0 ? "danger" : "neutral"}
         />
-        <Card
+        <StatCard
           label="Sesiones sin cobrar"
           value={sinCobrar}
           hint="Registradas con monto $0"
           icon={DollarSign}
+          tone={sinCobrar > 0 ? "warning" : "neutral"}
         />
       </div>
 
       {/* Indicadores rápidos */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card
+        <StatCard
           label="Pacientes activos"
           value={pacientesActivos}
           hint="Con tratamiento en curso"
           icon={Activity}
         />
-        <Card
+        <StatCard
           label="Pacientes nuevos"
           value={nuevosDelMes}
           hint="Este mes"
           icon={UserPlus}
+          tone="positive"
         />
-        <Card
+        <StatCard
           label="Turnos de hoy"
           value={turnosHoy.length}
           hint="Total agendados"
@@ -163,9 +141,11 @@ export default async function InicioPage() {
           </Link>
         </div>
         {turnosHoy.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-slate-400">
-            No hay turnos agendados para hoy.
-          </p>
+          <EmptyState
+            icon={CalendarClock}
+            title="No hay turnos para hoy"
+            description="Cuando agendes turnos van a aparecer acá."
+          />
         ) : (
           <ul className="divide-y divide-slate-100">
             {turnosHoy.map((t) => {

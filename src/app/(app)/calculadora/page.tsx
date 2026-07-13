@@ -17,6 +17,7 @@ import {
 } from "@/lib/types";
 import CalculadoraForm from "@/components/CalculadoraForm";
 import SetupBanner from "@/components/SetupBanner";
+import PageHeader from "@/components/PageHeader";
 
 export default async function CalculadoraPage() {
   const supabase = await createClient();
@@ -50,19 +51,11 @@ export default async function CalculadoraPage() {
 
   return (
     <div>
-      <header className="mb-6 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
-          <Calculator className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">
-            Calculadora de precios
-          </h1>
-          <p className="text-sm text-slate-500">
-            Costeo por hora de consultorio, según tus costos fijos reales.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        icon={Calculator}
+        title="Calculadora de precios"
+        subtitle="Costeo por hora de consultorio, según tus costos fijos reales."
+      />
 
       {needsSetup && <SetupBanner />}
 
