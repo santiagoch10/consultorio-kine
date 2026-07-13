@@ -118,6 +118,7 @@ export default async function PacienteDetalle({
                 <li key={t.id}>
                   <Link
                     href={`/sesiones/${t.id}`}
+                    prefetch={false}
                     className="flex items-center gap-4 px-6 py-4 transition-colors hover:bg-slate-50"
                   >
                     <div className="min-w-0 flex-1">

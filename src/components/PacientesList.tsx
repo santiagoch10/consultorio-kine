@@ -52,6 +52,7 @@ export default function PacientesList({
             <li key={p.id}>
               <Link
                 href={`/pacientes/${p.id}`}
+                prefetch={false}
                 className="flex items-center gap-4 px-6 py-4 transition-colors hover:bg-slate-50"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand">

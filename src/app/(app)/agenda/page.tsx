@@ -184,6 +184,7 @@ export default async function AgendaPage({
                 <Link
                   key={cell.date}
                   href={`/agenda?vista=dia&dia=${cell.date}`}
+                  prefetch={false}
                   className={`min-h-24 border-b border-r border-slate-100 p-1.5 transition-colors hover:bg-slate-50 ${
                     cell.inMonth ? "bg-white" : "bg-slate-50/50"
                   }`}
