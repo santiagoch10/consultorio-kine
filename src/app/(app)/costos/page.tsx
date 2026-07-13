@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { listUsers } from "@/lib/auth";
 import { isMissingTable } from "@/lib/supabase/errors";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { mesActualYM } from "@/lib/fecha";
 import type { Costo } from "@/lib/types";
 import CostoForm from "@/components/CostoForm";
 import SetupBanner from "@/components/SetupBanner";
@@ -21,7 +22,7 @@ export default async function CostosPage() {
   const profesionales = users.map((u) => ({ id: u.id, name: u.name }));
 
   // Resumen del mes actual.
-  const mesActual = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const mesActual = mesActualYM();
   const delMes = costos.filter((c) => c.fecha.startsWith(mesActual));
   const totalMes = delMes.reduce((a, c) => a + (Number(c.monto) || 0), 0);
   const fijosMes = delMes

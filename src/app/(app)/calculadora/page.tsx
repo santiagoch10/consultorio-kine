@@ -3,6 +3,7 @@ import { Calculator, Info } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingTable } from "@/lib/supabase/errors";
 import { formatCurrency } from "@/lib/format";
+import { mesActualYM } from "@/lib/fecha";
 import {
   costoPorHora,
   horasEfectivasMes,
@@ -19,7 +20,7 @@ import SetupBanner from "@/components/SetupBanner";
 
 export default async function CalculadoraPage() {
   const supabase = await createClient();
-  const mesActual = new Date().toISOString().slice(0, 7);
+  const mesActual = mesActualYM();
 
   const [
     { data: prestData },

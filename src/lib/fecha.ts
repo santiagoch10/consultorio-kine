@@ -5,14 +5,31 @@ const MESES = [
   "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
 ];
 
-// 'YYYY-MM' del mes actual.
-export function mesActualYM(): string {
-  return new Date().toISOString().slice(0, 7);
+// La app siempre razona sobre la fecha en hora de Argentina, sin importar
+// dónde corra el servidor (Render usa UTC). Usar toISOString() daba la fecha
+// en UTC: entre las 21 y las 24 hs de Argentina "hoy" saltaba al día
+// siguiente y los turnos/sesiones quedaban mal fechados.
+const TZ_AR = "America/Argentina/Buenos_Aires";
+const fmtDiaAR = new Intl.DateTimeFormat("en-CA", {
+  timeZone: TZ_AR,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+// 'YYYY-MM-DD' de una fecha (por defecto ahora) en hora de Argentina.
+export function fechaAR(date: Date = new Date()): string {
+  return fmtDiaAR.format(date);
 }
 
-// 'YYYY-MM-DD' de hoy.
+// 'YYYY-MM' del mes actual (hora de Argentina).
+export function mesActualYM(): string {
+  return fechaAR().slice(0, 7);
+}
+
+// 'YYYY-MM-DD' de hoy (hora de Argentina).
 export function hoyISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return fechaAR();
 }
 
 // "Julio 2026" a partir de 'YYYY-MM'.
